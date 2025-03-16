@@ -1,6 +1,6 @@
 dash==2.15.0
-matplotlib==3.10.1
-numpy==1.19.5
+matplotlib
+numpy
 pandas==1.1.5
 pip
 plotly==5.18.0
