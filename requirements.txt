@@ -3,7 +3,7 @@ setuptools==70.0.0  # Ajoutez setuptools pour éviter les problèmes de compilat
 wheel==0.40.0  # Ajoutez wheel pour faciliter la construction des packages
 dash==2.15.0
 matplotlib
-numpy
+numpy==1.21.0  # Utilisez une version compatible de numpy
 pandas==1.3.0
 plotly
 scikit_learn
