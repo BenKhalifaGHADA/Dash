@@ -1,6 +1,6 @@
 dash==2.15.0
 matplotlib
-numpy
+numpy==1.21.0
 pandas==1.3.0
 pip
 plotly
@@ -8,12 +8,3 @@ scikit_learn
 gunicorn
 dash-tools
 
-dash==2.15.0
-matplotlib==3.4.3
-numpy==1.21.0
-pandas==1.3.0
-pip==21.2.4
-plotly==5.3.1
-scikit_learn==0.24.2
-gunicorn==20.1.0
-dash-tools==0.1.0
