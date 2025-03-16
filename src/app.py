@@ -13,6 +13,8 @@ from sklearn.pipeline import Pipeline
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.neural_network import MLPClassifier
 from sklearn.svm import SVC
+from sklearn.cluster import KMeans
+from sklearn.pipeline import Pipeline
 import numpy as np
 from sklearn.metrics import roc_curve, roc_auc_score
 from dash import Dash, html, dcc, callback, Output, Input
@@ -175,25 +177,30 @@ pipelines = {
 'SVM': pipeline_svm
 }
 
+
 model_results = {}
 for name, pipeline in pipelines.items():
-pipeline.fit(X_train, y_train)
-y_pred = pipeline.predict(X_test)
-accuracy = accuracy_score(y_test, y_pred)
-report = classification_report(y_test, y_pred)
-y_prob = pipeline.predict_proba(X_test)[:], [ 1]
-auc_roc = roc_auc_score(y_test, y_prob)
-model_results[name] = {
-'accuracy': accuracy,
-'classification_report': report,
-'auc_roc': auc_roc,
-'pipeline': pipeline,
-'y_prob': y_prob
-}
-print(f'Model: {name}')
-print(f'Accuracy: {accuracy:.2f}')
-print(f'Classification Report:\n{report}')
-print(f'AUC-ROC: {auc_roc:.2f}\n')
+    pipeline.fit(X_train, y_train)
+    y_pred = pipeline.predict(X_test)
+    accuracy = accuracy_score(y_test, y_pred)
+    report = classification_report(y_test, y_pred)
+    y_prob = pipeline.predict_proba(X_test)[:, 1]  # Correction de la syntaxe pour obtenir les probabilités de la classe positive
+    auc_roc = roc_auc_score(y_test, y_prob)
+    model_results[name] = {
+        'accuracy': accuracy,
+        'classification_report': report,
+        'auc_roc': auc_roc,
+        'pipeline': pipeline,
+        'y_prob': y_prob
+    }
+
+# Afficher les résultats
+for name, results in model_results.items():
+    print(f"Results for {name}:")
+    print(f"Accuracy: {results['accuracy']}")
+    print(f"AUC-ROC: {results['auc_roc']}")
+    print(f"Classification Report:\n{results['classification_report']}")
+    print("\n")
 
 #--- Model Selection and Threshold Optimization ---
 #Select the best model (e.g., based on AUC-ROC)
@@ -323,16 +330,16 @@ features_cluster = df[['quiz_score', 'engagement_score', 'participation_score']]
 # Standardize the features
 scaler = StandardScaler()
 features_scaled = scaler.fit_transform(features_cluster)
-#Determine the optimal number of clusters using the Elbow method
+
+# Determine the optimal number of clusters using the Elbow method
 inertia = []
 K = range(1, 6)
 for k in K:
-kmeans = KMeans(n_clusters=k, random_state=42,
-n_init=10) # Explicitly set n_init
-kmeans.fit(features_scaled)
-inertia.append(kmeans.inertia_)
+    kmeans = KMeans(n_clusters=k, random_state=42, n_init=10)  # Explicitly set n_init
+    kmeans.fit(features_scaled)
+    inertia.append(kmeans.inertia_)
 
-#Plot the Elbow curve
+# Plot the Elbow curve
 plt.figure(figsize=(8, 5))
 plt.plot(K, inertia, 'bo-')
 plt.xlabel('Number of Clusters')
@@ -342,8 +349,7 @@ plt.xticks(K)
 plt.grid()
 plt.show()
 
-#Choose the optimal number of clusters (e.g., 3 based on the Elbow method)
-# Définir le nombre optimal de clusters
+# Choose the optimal number of clusters (e.g., 3 based on the Elbow method)
 optimal_k = 3
 kmeans = KMeans(n_clusters=optimal_k, random_state=42, n_init=10)  # Explicitly set n_init
 df['cluster'] = kmeans.fit_predict(features_scaled)
@@ -362,12 +368,8 @@ df['feedback'] = df['cluster'].apply(generate_feedback2)
 
 print(df[['student_id', 'student_name', 'cluster', 'feedback']])
 
-#Display the clustered data with feedback
-print(
-df[[
-'student_name'], [ 'quiz_score'], [ 'engagement_score'], [ 'participation_score'], [
-'cluster'], [ 'feedback'
-]])
+# Display the clustered data with feedback
+print(df[['student_name', 'quiz_score', 'engagement_score', 'participation_score', 'cluster', 'feedback']])
 
 #--- Interactive Dashboard with Dash ---
 #Create a copy of the DataFrame for Dash
