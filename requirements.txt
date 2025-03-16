@@ -1,9 +1,9 @@
 dash==2.15.0
 matplotlib
 numpy
-pandas==1.1.5
+pandas
 pip
-plotly==5.18.0
-scikit_learn==1.6.1
+plotly
+scikit_learn
 gunicorn
 dash-tools
