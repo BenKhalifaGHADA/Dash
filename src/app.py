@@ -264,14 +264,6 @@ df['feedback'] = df['cluster'].apply(generate_feedback2)
 
 # Display the clustered data with feedback
 print(df[['student_name', 'quiz_score', 'engagement_score', 'participation_score', 'cluster', 'feedback']])
-
-
-# In[10]:
-
-
-pip install dash
-
-
 # In[28]:
 
 
@@ -333,7 +325,8 @@ def generate_feedback2(cluster):
 df['feedback'] = df['cluster'].apply(generate_feedback2)
 
 # Créer l'application Dash
-app = Dash()
+app = Dash(__name__)
+server = app.server
 
 app.layout = html.Div([
     html.H1(children='Tableau de bord personnalisé des étudiants', style={'textAlign': 'center'}),
