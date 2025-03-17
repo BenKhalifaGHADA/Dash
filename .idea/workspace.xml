@@ -6,6 +6,13 @@
   <component name="ChangeListManager">
     <list default="true" id="8fd2f4fc-de84-401b-93ca-e21b9b5a6527" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/myenv/Lib/site-packages/pip-23.0.1.dist-info/RECORD" beforeDir="false" afterPath="$PROJECT_DIR$/myenv/Lib/site-packages/pip-23.0.1.dist-info/RECORD" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/myenv/Lib/site-packages/setuptools-65.5.0.dist-info/RECORD" beforeDir="false" afterPath="$PROJECT_DIR$/myenv/Lib/site-packages/setuptools-65.5.0.dist-info/RECORD" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/myenv/Scripts/Activate.ps1" beforeDir="false" afterPath="$PROJECT_DIR$/myenv/Scripts/Activate.ps1" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/myenv/Scripts/activate" beforeDir="false" afterPath="$PROJECT_DIR$/myenv/Scripts/activate" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/myenv/Scripts/activate.bat" beforeDir="false" afterPath="$PROJECT_DIR$/myenv/Scripts/activate.bat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/myenv/Scripts/deactivate.bat" beforeDir="false" afterPath="$PROJECT_DIR$/myenv/Scripts/deactivate.bat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/myenv/pyvenv.cfg" beforeDir="false" afterPath="$PROJECT_DIR$/myenv/pyvenv.cfg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -59,7 +66,7 @@
       <updated>1742079623761</updated>
       <workItem from="1742079625594" duration="3416000" />
       <workItem from="1742084710058" duration="576000" />
-      <workItem from="1742086743450" duration="14509000" />
+      <workItem from="1742086743450" duration="15503000" />
     </task>
     <servers />
   </component>
