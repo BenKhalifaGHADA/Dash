@@ -1,4 +1,4 @@
-pip==25.0.1  # Mettez à jour pip à la dernière version
+pip
 dash==2.15.0
 matplotlib==3.4.3
 numpy==2.2.3  # Utilisez une version compatible de numpy
