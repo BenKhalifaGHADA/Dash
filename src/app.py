@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-#coding: utf-8
+# coding: utf-8
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
@@ -9,7 +9,6 @@ from sklearn.metrics import accuracy_score, classification_report
 from sklearn.preprocessing import StandardScaler, QuantileTransformer
 from sklearn.impute import SimpleImputer
 from sklearn.compose import ColumnTransformer
-
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.neural_network import MLPClassifier
 from sklearn.svm import SVC
@@ -18,15 +17,14 @@ from sklearn.pipeline import Pipeline
 import numpy as np
 from sklearn.metrics import roc_curve, roc_auc_score
 from dash import Dash, html, dcc, callback, Output, Input
-import plotly.express as px
 import plotly.graph_objects as go
 from textblob import TextBlob
 
-#Load the dataset
+# Load the dataset
 data = pd.read_csv('student_assessment_data.csv')
 
-#--- Data Exploration and Preprocessing ---
-#Calculate descriptive statistics
+# --- Data Exploration and Preprocessing ---
+# Calculate descriptive statistics
 average_score = data['quiz_score'].mean()
 print(f'Average Quiz Score: {average_score}')
 
@@ -42,11 +40,11 @@ print(f'Average Content Quality Rating: {average_content_quality}')
 average_engagement = data['engagement_score'].mean()
 print(f'Average Engagement Score: {average_engagement}')
 
-pass_rate = (data['quiz_score'] >= 60).mean() * 100 # Assuming 60 is the passing grade
+pass_rate = (data['quiz_score'] >= 60).mean() * 100  # Assuming 60 is the passing grade
 print(f'Pass Rate: {pass_rate:.2f}%')
 
-#--- Data Visualization ---
-#Visualizing quiz scores
+# --- Data Visualization ---
+# Visualizing quiz scores
 plt.figure(figsize=(10, 6))
 plt.bar(data['student_name'], data['quiz_score'], color='skyblue')
 plt.title('Quiz Scores by Student')
@@ -56,7 +54,7 @@ plt.xticks(rotation=45)
 plt.grid(axis='y')
 plt.show()
 
-#Visualizing engagement scores
+# Visualizing engagement scores
 plt.figure(figsize=(10, 6))
 plt.bar(data['student_name'], data['engagement_score'], color='lightgreen')
 plt.title('Engagement Scores by Student')
@@ -66,7 +64,7 @@ plt.xticks(rotation=45)
 plt.grid(axis='y')
 plt.show()
 
-#Visualizing participation scores
+# Visualizing participation scores
 plt.figure(figsize=(10, 6))
 plt.bar(data['student_name'], data['participation_score'], color='orange')
 plt.title('Participation Scores by Student')
@@ -76,7 +74,7 @@ plt.xticks(rotation=45)
 plt.grid(axis='y')
 plt.show()
 
-#Visualizing content quality ratings
+# Visualizing content quality ratings
 plt.figure(figsize=(10, 6))
 plt.bar(data['student_name'], data['content_quality_rating'], color='purple')
 plt.title('Content Quality Ratings by Student')
@@ -86,7 +84,7 @@ plt.xticks(rotation=45)
 plt.grid(axis='y')
 plt.show()
 
-#Visualizing the pass rate
+# Visualizing the pass rate
 plt.figure(figsize=(10, 6))
 plt.bar(['Pass Rate'], [pass_rate], color='gold')
 plt.title('Pass Rate of Students')
@@ -95,39 +93,32 @@ plt.ylim(0, 100)
 plt.grid(axis='y')
 plt.show()
 
-#--- Machine Learning ---
-#Prepare data for the model
-data['pass'] = (data['quiz_score'] >= 50).astype(int) # 1 if passed, 0 otherwise
-features = data[[
-'attempts'], [ 'time_spent'], [ 'engagement_score'], [ 'content_quality_rating'], [
-'participation_score'
-]]
+# --- Machine Learning ---
+# Prepare data for the model
+data['pass'] = (data['quiz_score'] >= 50).astype(int)  # 1 if passed, 0 otherwise
+
+# Correct way to select features
+features = data[['attempts', 'time_spent', 'engagement_score', 'content_quality_rating', 'participation_score']]
 target = data['pass']
 print(target.value_counts())
 
-#Identify numerical and categorical features
+# Identify numerical features
 numerical_features = features.select_dtypes(include=np.number).columns.tolist()
 
-#For simplicity, assuming no categorical features requiring encoding
-#Create preprocessing pipelines for numerical features
-# 1.Handle missing values
-# 2. Standardize numerical features
-#3. # Additional quantile transformation
-# Define numerical transformer
+# Create preprocessing pipelines for numerical features
 numeric_transformer = Pipeline(steps=[
     ('imputer', SimpleImputer(strategy='mean')),
     ('scaler', StandardScaler()),
-    ('quantile', QuantileTransformer(output_distribution='normal'))
+    ('quantile', QuantileTransformer(output_distribution='normal', n_quantiles=min(1000, len(data))))
 ])
 
-
-#Combine preprocessing steps
 # Combine preprocessing steps
 preprocessor = ColumnTransformer(
     transformers=[
         ('num', numeric_transformer, numerical_features)
     ]
-) # Apply transformations
+)
+# Apply transformations
 
 #Define models
 logistic_regression = LogisticRegression(random_state=42)
@@ -164,19 +155,18 @@ pipeline_svm = Pipeline(steps=[
     ('classifier', svm_classifier)
 ])
 
-#Split data into training and testing sets
+# Split data into training and testing sets with stratification
 X_train, X_test, y_train, y_test = train_test_split(
-features, target, test_size=0.2, random_state=42)
+    features, target, test_size=0.2, random_state=42, stratify=target)  # Stratify to maintain class distribution
 
-#Train and evaluate models
+# Train and evaluate models
 pipelines = {
-'Logistic Regression': pipeline_logistic,
-'Random Forest': pipeline_rf,
-'Gradient Boosting': pipeline_gb,
-'MLP': pipeline_mlp,
-'SVM': pipeline_svm
+    'Logistic Regression': pipeline_logistic,
+    'Random Forest': pipeline_rf,
+    'Gradient Boosting': pipeline_gb,
+    'MLP': pipeline_mlp,
+    'SVM': pipeline_svm
 }
-
 
 model_results = {}
 for name, pipeline in pipelines.items():
@@ -184,24 +174,29 @@ for name, pipeline in pipelines.items():
     y_pred = pipeline.predict(X_test)
     accuracy = accuracy_score(y_test, y_pred)
     report = classification_report(y_test, y_pred)
-    y_prob = pipeline.predict_proba(X_test)[:, 1]  # Correction de la syntaxe pour obtenir les probabilités de la classe positive
-    auc_roc = roc_auc_score(y_test, y_prob)
+
+    # Calculate probabilities only if both classes are present
+    if len(np.unique(y_test)) > 1:
+        y_prob = pipeline.predict_proba(X_test)[:, 1]  # Get probabilities for the positive class
+        auc_roc = roc_auc_score(y_test, y_prob)
+    else:
+        auc_roc = None  # Set AUC-ROC to None if only one class is present
+
     model_results[name] = {
         'accuracy': accuracy,
         'classification_report': report,
         'auc_roc': auc_roc,
         'pipeline': pipeline,
-        'y_prob': y_prob
+        'y_prob': y_prob if 'y_prob' in locals() else None  # Store probabilities if calculated
     }
 
-# Afficher les résultats
+# Display results
 for name, results in model_results.items():
     print(f"Results for {name}:")
     print(f"Accuracy: {results['accuracy']}")
-    print(f"AUC-ROC: {results['auc_roc']}")
+    print(f"AUC-ROC: {results['auc_roc'] if results['auc_roc'] is not None else 'Not applicable'}")
     print(f"Classification Report:\n{results['classification_report']}")
     print("\n")
-
 #--- Model Selection and Threshold Optimization ---
 #Select the best model (e.g., based on AUC-ROC)
 best_model_name = max(model_results, key=lambda k: model_results[k]['auc_roc'])

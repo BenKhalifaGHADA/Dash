@@ -6,14 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="8fd2f4fc-de84-401b-93ca-e21b9b5a6527" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/myenv/Lib/site-packages/pip-23.0.1.dist-info/RECORD" beforeDir="false" afterPath="$PROJECT_DIR$/myenv/Lib/site-packages/pip-23.0.1.dist-info/RECORD" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/myenv/Lib/site-packages/setuptools-65.5.0.dist-info/RECORD" beforeDir="false" afterPath="$PROJECT_DIR$/myenv/Lib/site-packages/setuptools-65.5.0.dist-info/RECORD" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/myenv/Scripts/Activate.ps1" beforeDir="false" afterPath="$PROJECT_DIR$/myenv/Scripts/Activate.ps1" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/myenv/Scripts/activate" beforeDir="false" afterPath="$PROJECT_DIR$/myenv/Scripts/activate" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/myenv/Scripts/activate.bat" beforeDir="false" afterPath="$PROJECT_DIR$/myenv/Scripts/activate.bat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/myenv/Scripts/deactivate.bat" beforeDir="false" afterPath="$PROJECT_DIR$/myenv/Scripts/deactivate.bat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/myenv/pyvenv.cfg" beforeDir="false" afterPath="$PROJECT_DIR$/myenv/pyvenv.cfg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/app.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,6 +30,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Python.app.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "main",
@@ -66,11 +61,14 @@
       <updated>1742079623761</updated>
       <workItem from="1742079625594" duration="3416000" />
       <workItem from="1742084710058" duration="576000" />
-      <workItem from="1742086743450" duration="15503000" />
+      <workItem from="1742086743450" duration="18251000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/ProjectDash$app.coverage" NAME="app Coverage Results" MODIFIED="1742245019270" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
   </component>
 </project>
