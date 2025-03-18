@@ -1,10 +1,9 @@
-pip==25.0.1
 dash==2.15.0
-matplotlib==3.4.3
-numpy==1.19.3
+matplotlib
+numpy==1.21.0
 pandas==1.3.0
-plotly==5.3.1
-scikit-learn==0.24.2
-gunicorn==20.1.0
-dash-bootstrap-components==1.0.0  # Optional, if you plan to use Bootstrap components
-textblob==0.15.3  # For sentiment analysis
+pip
+plotly
+scikit_learn
+gunicorn
+dash-tools
