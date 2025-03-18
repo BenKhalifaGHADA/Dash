@@ -40,7 +40,7 @@ print(f'Average Content Quality Rating: {average_content_quality}')
 average_engagement = data['engagement_score'].mean()
 print(f'Average Engagement Score: {average_engagement}')
 
-pass_rate = (data['quiz_score'] >= 60).mean() * 100  # Assuming 60 is the passing grade
+pass_rate = (data['quiz_score'] >= 60).mean()  # Assuming 60 is the passing grade
 print(f'Pass Rate: {pass_rate:.2f}%')
 
 # --- Data Visualization ---
@@ -105,13 +105,17 @@ print(target.value_counts())
 # Identify numerical features
 numerical_features = features.select_dtypes(include=np.number).columns.tolist()
 
+# Ajustement de n_quantiles
+n_samples = len(data)
+n_quantiles = min(10, n_samples)
 # Create preprocessing pipelines for numerical features
+
+# Créer des pipelines de prétraitement pour les caractéristiques numériques
 numeric_transformer = Pipeline(steps=[
     ('imputer', SimpleImputer(strategy='mean')),
     ('scaler', StandardScaler()),
-    ('quantile', QuantileTransformer(output_distribution='normal', n_quantiles=min(1000, len(data))))
+    ('quantile', QuantileTransformer(output_distribution='normal', n_quantiles=n_quantiles))
 ])
-
 # Combine preprocessing steps
 preprocessor = ColumnTransformer(
     transformers=[
@@ -168,12 +172,13 @@ pipelines = {
     'SVM': pipeline_svm
 }
 
+
 model_results = {}
 for name, pipeline in pipelines.items():
     pipeline.fit(X_train, y_train)
     y_pred = pipeline.predict(X_test)
     accuracy = accuracy_score(y_test, y_pred)
-    report = classification_report(y_test, y_pred)
+    report = classification_report(y_test, y_pred, zero_division=0)  # Gestion de la précision
 
     # Calculate probabilities only if both classes are present
     if len(np.unique(y_test)) > 1:
