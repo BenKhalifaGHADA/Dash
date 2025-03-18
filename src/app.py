@@ -116,83 +116,51 @@ numeric_transformer = Pipeline(steps=[
     ('scaler', StandardScaler()),
     ('quantile', QuantileTransformer(output_distribution='normal', n_quantiles=n_quantiles))
 ])
+
+
 # Combine preprocessing steps
 preprocessor = ColumnTransformer(
     transformers=[
-        ('num', numeric_transformer, numerical_features)
+        ('num', numeric_transformer, numerical_features)  # Ensure numerical_features is defined
     ]
 )
-# Apply transformations
-
-#Define models
-logistic_regression = LogisticRegression(random_state=42)
-random_forest = RandomForestClassifier(random_state=42)
-gradient_boosting = GradientBoostingClassifier(random_state=42)
-mlp_classifier = MLPClassifier(
-random_state=42, max_iter=300) # Neural network
-svm_classifier = SVC(
-probability=True,
-random_state=42) # Support Vector Machine, probability needed for ROC
-
-pipeline_logistic = Pipeline(steps=[
-    ('preprocessor', preprocessor),
-    ('classifier', logistic_regression)
-])
-
-pipeline_rf = Pipeline(steps=[
-    ('preprocessor', preprocessor),
-    ('classifier', random_forest)
-])
-
-pipeline_gb = Pipeline(steps=[
-    ('preprocessor', preprocessor),
-    ('classifier', gradient_boosting)
-])
-
-pipeline_mlp = Pipeline(steps=[
-    ('preprocessor', preprocessor),
-    ('classifier', mlp_classifier)
-])
-
-pipeline_svm = Pipeline(steps=[
-    ('preprocessor', preprocessor),
-    ('classifier', svm_classifier)
-])
+# Define models
+models = {
+    'Logistic Regression': LogisticRegression(random_state=42),
+    'Random Forest': RandomForestClassifier(random_state=42),
+    'Gradient Boosting': GradientBoostingClassifier(random_state=42),
+    'MLP': MLPClassifier(random_state=42, max_iter=300),
+    'SVM': SVC(probability=True, random_state=42)
+}
+# Create pipelines for each model
+pipelines = {name: Pipeline(steps=[('preprocessor', preprocessor), ('classifier', model)]) for name, model in models.items()}
 
 # Split data into training and testing sets with stratification
 X_train, X_test, y_train, y_test = train_test_split(
-    features, target, test_size=0.2, random_state=42, stratify=target)  # Stratify to maintain class distribution
+    features, target, test_size=0.2, random_state=42, stratify=target
+)
 
 # Train and evaluate models
-pipelines = {
-    'Logistic Regression': pipeline_logistic,
-    'Random Forest': pipeline_rf,
-    'Gradient Boosting': pipeline_gb,
-    'MLP': pipeline_mlp,
-    'SVM': pipeline_svm
-}
-
-
 model_results = {}
 for name, pipeline in pipelines.items():
     pipeline.fit(X_train, y_train)
     y_pred = pipeline.predict(X_test)
     accuracy = accuracy_score(y_test, y_pred)
-    report = classification_report(y_test, y_pred, zero_division=0)  # Gestion de la précision
+    report = classification_report(y_test, y_pred, zero_division=0)
 
     # Calculate probabilities only if both classes are present
     if len(np.unique(y_test)) > 1:
-        y_prob = pipeline.predict_proba(X_test)[:, 1]  # Get probabilities for the positive class
+        y_prob = pipeline.predict_proba(X_test)[:, 1]
         auc_roc = roc_auc_score(y_test, y_prob)
     else:
-        auc_roc = None  # Set AUC-ROC to None if only one class is present
+        auc_roc = None
 
     model_results[name] = {
         'accuracy': accuracy,
         'classification_report': report,
         'auc_roc': auc_roc,
         'pipeline': pipeline,
-        'y_prob': y_prob if 'y_prob' in locals() else None  # Store probabilities if calculated
+        'y_prob': y_prob if 'y_prob' in locals() else None
     }
 
 # Display results
@@ -200,21 +168,20 @@ for name, results in model_results.items():
     print(f"Results for {name}:")
     print(f"Accuracy: {results['accuracy']}")
     print(f"AUC-ROC: {results['auc_roc'] if results['auc_roc'] is not None else 'Not applicable'}")
-    print(f"Classification Report:\n{results['classification_report']}")
-    print("\n")
-#--- Model Selection and Threshold Optimization ---
-#Select the best model (e.g., based on AUC-ROC)
+    print(f"Classification Report:\n{results['classification_report']}\n")
+
+# Model Selection and Threshold Optimization
 best_model_name = max(model_results, key=lambda k: model_results[k]['auc_roc'])
 best_model = model_results[best_model_name]['pipeline']
 y_prob_best = model_results[best_model_name]['y_prob']
 
-#Optimize threshold for the best model
+# Optimize threshold for the best model
 fpr, tpr, thresholds = roc_curve(y_test, y_prob_best)
 optimal_idx = np.argmax(tpr - fpr)
 optimal_threshold = thresholds[optimal_idx]
 print(f'Optimal threshold for {best_model_name}: {optimal_threshold:.2f}')
 
-#Evaluate the best model with the optimized threshold
+# Evaluate the best model with the optimized threshold
 y_pred_optimal = (y_prob_best >= optimal_threshold).astype(int)
 accuracy_optimal = accuracy_score(y_test, y_pred_optimal)
 report_optimal = classification_report(y_test, y_pred_optimal)
